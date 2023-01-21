@@ -1,6 +1,7 @@
 const { response } = require("express");
 const express = require("express");
 const cors = require("cors");
+const path = require('path');
 
 const OPENAI_API_KEY = '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';
 
@@ -18,7 +19,20 @@ const openai = new OpenAIApi(configuration);
 
 
 
+
+
 const app = express();
+
+app.use(express.static(path.join(__dirname, "./client/build")));
+app.get("*", function (_, res) {
+  res.sendFile(
+    path.join(__dirname, "./client/build/index.html"),
+    function (err) {
+      res.status(500).send(err);
+    }
+  );
+});
+
 app.use(cors());
 
 app.use(express.json());
